@@ -15,17 +15,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
 
 // Necessary for Next auth
 model Account {
@@ -63,7 +52,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    orders        Order[]
 }
 
 model VerificationToken {
@@ -73,3 +62,79 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// Food Items
+model Food {
+    id                  String   @id @default(cuid())
+    name                String
+    description         String
+    image               String
+    defaultIngredients  String[] // Array of default ingredient names
+    baseCalories        Int
+    baseProtein         Float
+    baseCarbs           Float
+    baseFat             Float
+    isAvailable         Boolean  @default(true)
+    createdAt           DateTime @default(now())
+    updatedAt           DateTime @updatedAt
+    orders              Order[]
+
+    @@index([name])
+}
+
+// Add-ons / Ingredients
+model AddOn {
+    id          String   @id @default(cuid())
+    name        String
+    category    String   // vegetable, protein, dairy, grain, spice
+    calories    Int      @default(20)
+    protein     Float    @default(2)
+    carbs       Float    @default(3)
+    fat         Float    @default(1)
+    isAvailable Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    orders      OrderAddOn[]
+
+    @@index([category])
+}
+
+// Orders
+model Order {
+    id              String       @id @default(cuid())
+    userId          String
+    foodId          String
+    status          String       @default("pending") // pending, confirmed, preparing, completed, cancelled
+    totalCalories   Int
+    totalProtein    Float
+    totalCarbs      Float
+    totalFat        Float
+    totalFiber      Float        @default(5)
+    createdAt       DateTime     @default(now())
+    updatedAt       DateTime     @updatedAt
+    
+    user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    food            Food         @relation(fields: [foodId], references: [id])
+    addOns          OrderAddOn[]
+
+    @@index([userId])
+    @@index([foodId])
+    @@index([status])
+}
+
+// Junction table for Order and AddOns (many-to-many)
+model OrderAddOn {
+    id        String   @id @default(cuid())
+    orderId   String
+    addOnId   String
+    createdAt DateTime @default(now())
+    
+    order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    addOn     AddOn    @relation(fields: [addOnId], references: [id])
+
+    @@unique([orderId, addOnId])
+    @@index([orderId])
+    @@index([addOnId])
+}
+
+
