@@ -1,13 +1,9 @@
-import Link from "next/link";
 import React from "react";
-import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
-import { AuthButton } from "./_components/auth-button";
 import { MenuCards } from './_components/menu-cards';
 
 export default async function Home() {
   const foods = await api.food.getAll();
-  const session = await auth();
 
   return (
     <HydrateClient>

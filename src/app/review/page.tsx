@@ -39,7 +39,7 @@ export default function ReviewPage() {
   useEffect(() => {
     const data = sessionStorage.getItem('pendingOrder');
     if (data) {
-      setOrderData(JSON.parse(data));
+      setOrderData(JSON.parse(data) as OrderData);
     } else {
       router.push('/');
     }

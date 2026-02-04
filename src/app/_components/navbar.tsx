@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Leaf, Menu, X, Home, ShoppingBag, Info } from 'lucide-react';
+import { Leaf, Menu, X, Home, ShoppingBag } from 'lucide-react';
 import { AuthButton } from './auth-button';
 
 const Navbar = () => {
