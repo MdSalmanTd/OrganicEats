@@ -1,4 +1,4 @@
-import { FoodItem, Ingredient } from '~/app/types';
+import type { FoodItem, Ingredient } from '~/app/types';
 
 export const FOOD_ITEMS: FoodItem[] = [
   {

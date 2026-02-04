@@ -4,8 +4,8 @@ import {
   createContext,
   useContext,
   useState,
-  ReactNode,
 } from "react";
+import type { ReactNode } from "react";
 
 import type { FoodItem, Ingredient, NutritionalInfo } from "~/app/types";
 
